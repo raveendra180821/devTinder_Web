@@ -9,6 +9,7 @@ const Login = () => {
 
     const [userName, setUserName] = useState("raveendra@gmail.com");
     const [password, setPassword] = useState("Raveendra@123");
+    const [errMsg, setErrMsg] = useState("")
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -24,10 +25,16 @@ const Login = () => {
             )
 
             dispatch(addUser(res.data.user))
-            navigate("/")
+            return navigate("/")
 
         } catch (e) {
-            console.log(e)
+            if (e.status === 400) {
+                setErrMsg("* " + e?.response?.data?.message)
+            }
+            else {
+                setErrMsg("Something went wrong, unable to login")
+            }
+
         }
     }
 
@@ -55,6 +62,7 @@ const Login = () => {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </fieldset>
+                <span className='text-red-400 font-bold'>{errMsg}</span>
                 <div className="card-actions justify-center mt-5">
                     <button
                         className="btn w-40"
