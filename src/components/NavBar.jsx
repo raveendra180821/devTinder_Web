@@ -5,12 +5,9 @@ import { removeUser } from '../utils/userSlice'
 import { BASE_URL } from '../utils/constants'
 import axios from 'axios'
 
-const defaultPhotoUrl = "https://cdn.vectorstock.com/i/500p/66/13/default-avatar-profile-icon-social-media-user-vector-49816613.jpg"
-
 const NavBar = () => {
 
     const user = useSelector((state) => state.user)
-    const profilePhoto = user && user.photoUrl ? user.photoUrl : defaultPhotoUrl
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -39,8 +36,8 @@ const NavBar = () => {
                         <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                             <div className="w-8 rounded-full">
                                 <img
-                                    alt="Tailwind CSS Navbar component"
-                                    src={profilePhoto} />
+                                    alt="Profile Photo"
+                                    src={user.photoUrl} />
                             </div>
                         </div>
                         <ul

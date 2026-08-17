@@ -4,7 +4,7 @@ const Feed = () => {
 
     return (
         <div>
-            <Feed />
+            <FeedUserCard />
         </div>
     )
 }

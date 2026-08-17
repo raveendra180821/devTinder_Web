@@ -1,4 +1,4 @@
-import React, { use, useState } from 'react'
+import  { useState } from 'react'
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { addUser } from '../utils/userSlice';
@@ -7,7 +7,7 @@ import { BASE_URL } from '../utils/constants';
 
 const Login = () => {
 
-    const [userName, setUserName] = useState("raveendra@gmail.com");
+    const [userName, setUserName] = useState("raveendra.gulivindala@gmail.com");
     const [password, setPassword] = useState("Raveendra@123");
     const [errMsg, setErrMsg] = useState("")
     const dispatch = useDispatch()
@@ -24,8 +24,10 @@ const Login = () => {
                 { withCredentials: true }
             )
 
-            dispatch(addUser(res.data.user))
-            return navigate("/")
+            if (res.status === 200) {
+                dispatch(addUser(res.data.user))
+                return navigate("/")
+            }
 
         } catch (e) {
             if (e.status === 400) {
