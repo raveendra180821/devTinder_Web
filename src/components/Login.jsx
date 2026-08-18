@@ -25,7 +25,7 @@ const Login = () => {
             )
 
             if (res.status === 200) {
-                dispatch(addUser(res.data.user))
+                dispatch(addUser(res?.data?.user))
                 return navigate("/")
             }
 
