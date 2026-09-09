@@ -1,35 +1,46 @@
 import FeedUserCard from './FeedUserCard'
 import axios from "axios"
 import { BASE_URL } from "../utils/constants"
-import { useEffect } from "react"
-import { addData } from '../utils/feedSlice'
+import { useEffect, useState } from "react"
+import { addFeed } from '../utils/feedSlice'
 import { useDispatch, useSelector } from 'react-redux'
 
 const Feed = () => {
 
     const feed = useSelector((state) => state.feed)
 
+    const [isFeedEnd, setIsFeedEnd] = useState(false)
+
     const dispatch = useDispatch()
 
-    const getFeed = async () => {
-        if (feed) return;
+    const fetchFeed = async () => {
         try {
             const res = await axios.get(BASE_URL + "/feed", { withCredentials: true })
-            dispatch(addData(res?.data?.data))
+            if (res.data.data.length === 0) return setIsFeedEnd(true)
+            dispatch(addFeed(res?.data?.data))
         }
         catch (e) {
             console.log(e.message)
         }
     }
 
-    useEffect(() => { getFeed() }, [])
+    useEffect(() => {
+        if (!feed || feed.length === 0) {
+            fetchFeed()
+        }
+    }, [feed])
+
+    if (isFeedEnd) return <h1>No new users on the platform. please come back after sometime</h1>
+
+    if (!feed || feed.length === 0) return <h1>Loading . . .</h1>
+
+
 
     return (
-        feed && (
-            <div>
-                <FeedUserCard data={feed[0]} />
-            </div>
-        )
+
+        <div className='h-full'>
+            <FeedUserCard data={feed[0]} />
+        </div>
     )
 }
 

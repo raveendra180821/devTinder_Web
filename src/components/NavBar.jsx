@@ -1,9 +1,11 @@
-import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
-import { removeUser } from '../utils/userSlice'
+import { clearUser } from '../utils/userSlice'
 import { BASE_URL } from '../utils/constants'
 import axios from 'axios'
+import { clearFeed } from '../utils/feedSlice'
+import { clearRequests } from '../utils/requestSlice'
+import { clearConnections } from '../utils/connectionSlice'
 
 const NavBar = () => {
 
@@ -15,7 +17,10 @@ const NavBar = () => {
     const handleLogout = async () => {
         try {
             const res = await axios.post(BASE_URL + "/logout", {}, { withCredentials: true })
-            dispatch(removeUser())
+            dispatch(clearUser())
+            dispatch(clearFeed())
+            dispatch(clearRequests())
+            dispatch(clearConnections())
             navigate("/login")
         }
         catch (e) {
@@ -49,7 +54,12 @@ const NavBar = () => {
                                     <span className="badge">New</span>
                                 </Link>
                             </li>
-                            <li><a>Settings</a></li>
+                            <li>
+                                <Link to="requests">Requests</Link>
+                            </li>
+                            <li>
+                                <Link to="connections">Connections</Link>
+                            </li>
                             <li><a onClick={handleLogout}>Logout</a></li>
                         </ul>
                     </div>

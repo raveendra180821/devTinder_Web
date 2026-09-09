@@ -7,13 +7,14 @@ import { BASE_URL } from '../utils/constants';
 
 const Login = () => {
 
-    const [userName, setUserName] = useState("raveendra.gulivindala@gmail.com");
-    const [password, setPassword] = useState("Raveendra@123");
+    const [userName, setUserName] = useState("");
+    const [password, setPassword] = useState("");
     const [errMsg, setErrMsg] = useState("")
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const handleLogin = async () => {
+        setErrMsg("")
         try {
             const res = await axios.post(
                 BASE_URL + "/login",

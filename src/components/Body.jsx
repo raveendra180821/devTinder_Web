@@ -39,7 +39,7 @@ const Body = ({ children }) => {
     return (
         <div className='h-screen flex flex-col'>
             <NavBar />
-            <div className='m-auto'>
+            <div className='mx-auto my-15'>
                 <Outlet />
             </div>
             <Footer />
