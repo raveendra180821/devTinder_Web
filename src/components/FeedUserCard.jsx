@@ -4,8 +4,9 @@ import { useDispatch } from "react-redux"
 import { removeUserFromFeed } from "../utils/feedSlice"
 
 const FeedUserCard = ({ data }) => {
+  
 
-  const { _id, firstName, lastName, photoUrl, description, gender, disableButton } = data
+  const { _id, firstName, lastName, photoUrl, age, about, gender, companyName, designation, disableButton } = data
   const dispatch = useDispatch()
 
   const handleSendOrIgnoreRequest = async (status, id) => {
@@ -32,11 +33,20 @@ const FeedUserCard = ({ data }) => {
         <div className="flex items-center">
           <h2 className="card-title">
             {firstName + " " + lastName}
-            {gender && <span className="badge badge-sm badge-soft badge-accent">{gender}</span>}
+            <span className="badge badge-sm badge-soft badge-accent">New</span>
           </h2>
         </div>
 
-        <p>{description}</p>
+        {companyName && (
+          <div>
+            <span>{designation}</span>
+            {` @ `}
+            <span className="font-bold">{companyName}</span>
+          </div>
+        )}
+        {age && gender && <p>{age}, {gender}</p>}
+
+        {about && <p className="mt-2">{about.length > 90 ? about.slice(0, 90) + "..." : about}</p>}
         <div className="card-actions justify-between mt-6">
           <button
             disabled={disableButton}
