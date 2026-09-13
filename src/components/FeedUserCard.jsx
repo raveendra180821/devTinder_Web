@@ -43,7 +43,7 @@ const FeedUserCard = ({ data }) => {
           <img
             src={photoUrl}
             alt="Photo"
-            className="min-h-[300px] w-full object-cover"
+            className="min-h-[300px] w-full object-cover "
           />
         </figure>
         <div className="card-body">

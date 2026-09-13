@@ -260,7 +260,7 @@ const Profile = () => {
           type="button"
           onClick={handleSaveProfileUpdates}
           disabled={firstName === "" || lastName === "" || email === ""}
-          className="btn btn-wide btn-primary mt-5 "
+          className="btn btn-wide btn-primary my-5 "
         >
           Save Updates
         </button>
