@@ -45,7 +45,7 @@ const Requests = () => {
         return (
           <div key={_id} className="flex min-h-20 min-w-0 w-full max-w-200 items-center rounded-r-xl rounded-l-[50px] bg-base-300 px-2 py-2 mb-4">
             <figure className="shrink-0">
-              <img alt="photo" src={photoUrl} className="size-16 rounded-full object-cover" />
+              <img alt="photo" src={photoUrl} className="w-16 h-16 rounded-full object-cover" />
             </figure>
             <div className="flex-1 min-w-50 min-[572px]:min-w-75 min-[700px]:min-w-125 min-[800px]:min-w-130 px-3 text-left">
               <h2 className="font-bold">{firstName + " " + lastName}</h2>

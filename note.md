@@ -63,3 +63,8 @@
 
     - sudo nginx -t
     - sudo systemctl reload nginx
+
+
+# craete .env in production
+
+    - sudo nano .env 
