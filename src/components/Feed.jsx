@@ -38,7 +38,7 @@ const Feed = () => {
 
     return (
 
-        <div className='h-full'>
+        <div className='h-full flex item-center'>
             <FeedUserCard data={feed[0]} />
         </div>
     )

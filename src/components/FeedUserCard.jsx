@@ -32,7 +32,7 @@ const FeedUserCard = ({ data }) => {
   };
 
   return (
-    <div className="bg-gray-700 rounded-t-lg rounded-b-xl">
+    <div className="mx-auto rounded-t-lg rounded-b-xl">
       {selfCard && (
         <p className=" py-2 text-center text-sm">
           This is how your card visible to others

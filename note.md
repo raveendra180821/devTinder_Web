@@ -65,6 +65,12 @@
     - sudo systemctl reload nginx
 
 
-# craete .env in production
+# craete .env in production (AWS)
 
     - sudo nano .env 
+
+# config websocket
+
+## Server API
+
+    - install socket.io

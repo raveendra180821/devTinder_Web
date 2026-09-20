@@ -3,6 +3,7 @@ import { BASE_URL } from "../utils/constants"
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { addConnections } from "../utils/connectionSlice"
+import { useNavigate } from "react-router-dom"
 
 
 const Connections = () => {
@@ -10,6 +11,7 @@ const Connections = () => {
     const connections = useSelector(state => state.connections)
 
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const fetchConnections = async () => {
         const res = await axios.get(BASE_URL + "/user/connections", { withCredentials: true })
@@ -26,12 +28,12 @@ const Connections = () => {
     if (connections.length === 0) return <h1>No connections found</h1>
 
     return (
-        <div className="text-center w-3xl">
+        <div className="text-center mx-auto w-3xl">
             <h1 className="text-xl font-bold my-10">Connections</h1>
             {connections.map(con => {
                 const { _id, firstName, lastName, photoUrl, description } = con
                 return (
-                    <div key={_id} className="flex h-22 w-full bg-base-300 rounded-r-xl rounded-l-[50px] mx-auto mb-4">
+                    <div key={_id} className="flex items-center h-22 w-full bg-base-300 rounded-r-xl rounded-l-[50px] mx-auto mb-4">
                         <figure className="my-auto ml-1.5">
                             <img alt="photo" src={photoUrl} className="w-20 h-20 rounded-full object-cover" />
                         </figure>
@@ -39,6 +41,7 @@ const Connections = () => {
                             <h2 className="font-bold">{firstName + " " + lastName}</h2>
                             <p className="text-sm max-w-2xl">{description}</p>
                         </div>
+                        <button onClick={() => {navigate("/chat/" + _id)}} className="ml-auto mr-5 btn">Message</button>
                     </div>
                 )
             })}

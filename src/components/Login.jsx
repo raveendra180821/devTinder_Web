@@ -16,6 +16,9 @@ const Login = () => {
     const navigate = useNavigate()
 
     const handleLogin = async () => {
+        if (!userName & !password) return setErrMsg("Please enter Username & password")
+        if (!userName) return setErrMsg("Please enter Username")
+        if (!password) return setErrMsg("Please enter Password")
         setErrMsg("")
         try {
             const res = await axios.post(
@@ -63,7 +66,7 @@ const Login = () => {
     }
 
     return (
-        <div className="card bg-accent-content text-primary-content w-96">
+        <div className="mx-auto card bg-accent-content text-primary-content w-96">
             <div className="card-body">
                 <h2 className="card-title mx-auto">{isLoginForm ? "LOGIN" : "SIGN UP"}</h2>
                 {!isLoginForm && (<>
