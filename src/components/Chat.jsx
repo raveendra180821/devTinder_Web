@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import io from "socket.io-client";
 import { BASE_URL } from "../utils/constants";
 import axios from "axios";
@@ -15,6 +15,8 @@ const Chat = () => {
   const targetUser = connections.find((user) => user._id === targetUserId);
   const loggedInUser = useSelector((state) => state?.user);
   const loggedInUserId = loggedInUser?._id;
+
+  const navigate = useNavigate()
 
   const fetchChatMessages = async (receiverId) => {
     try {
@@ -47,7 +49,7 @@ const Chat = () => {
   useEffect(() => {
     if (!loggedInUserId || !targetUserId) return;
 
-    const socket = io(BASE_URL, { withCredentials: true });
+    const socket = io(BASE_URL + "/socket.io", { withCredentials: true });
     socketRef.current = socket;
 
     socket.on("connect", () => {
@@ -59,7 +61,6 @@ const Chat = () => {
     });
 
     socket.on("messageRecived", (payload) => {
-      console.log(payload.timeStamp)
       setMessages((prev) => [...prev, payload]);
     });
 
@@ -83,6 +84,14 @@ const Chat = () => {
     setNewMessage("");
   };
 
+  if (!targetUser){
+     return (
+      <div className="mx-auto flex w-full max-w-[340px] flex-col items-center mt-[20px]">
+        <p className="text-[16px]">Something went wrong, Go back and open the connection again</p>
+        <button onClick={() => navigate("/connections")} type="button" className="btn btn-success w-fit mt-[10px]">Back</button>
+      </div>
+     )
+  }
   return (
     <div className="mx-auto flex flex-col h-[calc(100dvh-148px)] mt-[10px] w-full max-w-[768px] border border-gray-500/75">
       <div className="flex items-center shrink-0 px-[8px] h-[56px] border-b border-gray-500/75 ">
@@ -91,7 +100,7 @@ const Chat = () => {
           alt="profile"
           className="h-[40px] w-[40px] rounded-full object-cover mr-2"
         />
-        <h1 className="flex-1 text-[16px] min-w-0 truncate text-left">{targetUser?.firstName + " " + targetUser?.lastName}</h1>
+        <h1 className="flex-1 text-[16px] min-w-0 truncate text-left font-bold">{targetUser?.firstName + " " + targetUser?.lastName}</h1>
       </div>
       <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-[8px]">
         {messages.map(({ senderId, message, timeStamp }, index) => {console.log(timeStamp) 
