@@ -30,26 +30,27 @@ const NavBar = () => {
     }
 
     return (
-        <div className="navbar bg-base-300 shadow-sm">
+        <div className="navbar shrink-0 min-h-[64px] bg-base-300 shadow-sm">
             <div className="flex-1">
-                <Link to="/" className="btn btn-ghost text-xl">💢 DevTinder</Link>
+                <Link to="/" className="btn btn-ghost text-[20px]">💢 DevTinder</Link>
             </div>
             {user && (
                 <div className="flex gap-2 items-center">
-                    <span className='text-sm text-green-500'>Welcome, {user.firstName}</span>
-                    <div className="dropdown dropdown-end mx-4">
+                    <span className='hidden min-[640px]:inline text-sm text-green-500'>Welcome, {user.firstName}</span>
+                    <div className="dropdown dropdown-end mx-[8px]">
                         <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-                            <div className="w-8 rounded-full">
+                            <figure className='shrink-0'>
                                 <img
                                     alt="Profile Photo"
-                                    src={user.photoUrl} />
-                            </div>
+                                    src={user.photoUrl}
+                                    className='w-[36px] h-[36px] rounded-full object-cover' />
+                            </figure>
                         </div>
                         <ul
                             tabIndex="-1"
-                            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                            className="menu dropdown-content bg-base-100 rounded-box z-[1] mt-[12px] w-[208px] p-[8px] shadow">
                             <li>
-                                <Link to="profile" className="justify-between">
+                                <Link to="/profile" className="justify-between">
                                     Profile
                                     <span className="badge">New</span>
                                 </Link>
@@ -60,7 +61,9 @@ const NavBar = () => {
                             <li>
                                 <Link to="/connections">Connections</Link>
                             </li>
-                            <li><a onClick={handleLogout}>Logout</a></li>
+                            <li>
+                                <button type='button' onClick={handleLogout}>Logout</button>
+                            </li>
                         </ul>
                     </div>
                 </div>

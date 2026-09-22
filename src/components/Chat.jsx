@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import io from "socket.io-client";
 import { BASE_URL } from "../utils/constants";
 import axios from "axios";
+import {format} from "date-fns"
+
 
 const Chat = () => {
   const { targetUserId } = useParams();
@@ -14,18 +16,20 @@ const Chat = () => {
   const loggedInUser = useSelector((state) => state?.user);
   const loggedInUserId = loggedInUser?._id;
 
-  const fetchChatMessages = async (recieverId) => {
+  const fetchChatMessages = async (receiverId) => {
     try {
-      const res = await axios.get(BASE_URL + "/chat/" + recieverId, {
+      const res = await axios.get(BASE_URL + "/chat/" + receiverId, {
         withCredentials: true,
       });
 
       const chatMessages = res.data.map((v) => {
-        const { sender, message } = v;
+        const { sender, message, timeStamp } = v;
         return {
+          senderId: sender._id,
           senderFirstName: sender.firstName,
           senderLastName: sender.lastName,
-          message: message,
+          message,
+          timeStamp,
         };
       });
       setMessages(chatMessages);
@@ -36,96 +40,90 @@ const Chat = () => {
 
   useEffect(() => {
     fetchChatMessages(targetUserId);
-    console.log(messages);
   }, []);
 
+  const socketRef = useRef(null);
+
   useEffect(() => {
-    if (!loggedInUser) return;
+    if (!loggedInUserId || !targetUserId) return;
 
-    const socket = io(BASE_URL);
+    const socket = io(BASE_URL, { withCredentials: true });
+    socketRef.current = socket;
 
-    socket.emit("joinChat", {
-      senderName: loggedInUser.firstName,
-      senderId: loggedInUserId,
-      recieverId: targetUserId,
+    socket.on("connect", () => {
+      socket.emit("joinChat", {
+        senderName: loggedInUser.firstName,
+        senderId: loggedInUserId,
+        receiverId: targetUserId,
+      });
     });
 
-    socket.on(
-      "messageRecived",
-      ({ senderFirstName, senderLastName, message }) => {
-        setMessages((prevState) => [
-          ...prevState,
-          { senderFirstName, senderLastName, message },
-        ]);
-      },
-    );
+    socket.on("messageRecived", (payload) => {
+      console.log(payload.timeStamp)
+      setMessages((prev) => [...prev, payload]);
+    });
 
     return () => {
       socket.disconnect();
+      socketRef.current = null;
     };
-  }, []);
+  }, [loggedInUserId, targetUserId]);
 
   const handleSendMessage = () => {
-    if (!newMessage) return;
-    if (!loggedInUser) return;
+    const text = newMessage.trim();
+    if (!text || !socketRef.current) return;
 
-    const socket = io(BASE_URL);
-
-    socket.emit("sendMessage", {
+    socketRef.current.emit("sendMessage", {
       senderFirstName: loggedInUser.firstName,
       senderLastName: loggedInUser.lastName,
       senderId: loggedInUserId,
-      recieverId: targetUserId,
-      message: newMessage,
+      receiverId: targetUserId,
+      message: text,
     });
-
     setNewMessage("");
   };
 
   return (
-    <div className="mx-auto flex flex-col h-[80%] w-[40%] border border-gray-500/75">
-      <div className="flex items-center px-2 h-[10%] border-b border-gray-500/75 ">
+    <div className="mx-auto flex flex-col h-[calc(100dvh-148px)] mt-[10px] w-full max-w-[768px] border border-gray-500/75">
+      <div className="flex items-center shrink-0 px-[8px] h-[56px] border-b border-gray-500/75 ">
         <img
           src={targetUser?.photoUrl || ""}
           alt="profile"
-          className="h-[75%] rounded-full mr-2"
+          className="h-[40px] w-[40px] rounded-full object-cover mr-2"
         />
-        <h1>{targetUser?.firstName + " " + targetUser?.lastName}</h1>
+        <h1 className="flex-1 text-[16px] min-w-0 truncate text-left">{targetUser?.firstName + " " + targetUser?.lastName}</h1>
       </div>
-      <div className="p-2 h-[80%] overflow-hidden">
-        {messages.map(({ senderFirstName, senderLastName, message }, index) => (
+      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-[8px]">
+        {messages.map(({ senderId, message, timeStamp }, index) => {console.log(timeStamp) 
+        return(
+          
           <div
             key={index}
-            className={
-              senderFirstName === loggedInUser.firstName
-                ? "max-w-3/4 ml-auto"
-                : "max-w-3/4"
-            }
+            className={`w-fit max-w-[75%] font-medium my-[10px] p-[8px] rounded-t-[14px] ${senderId === loggedInUserId ? "bg-[#387549] rounded-bl-[14px] ml-auto" : "bg-[#636262] rounded-br-[14px]"}`}
           >
-            <div
-              className={
-                senderFirstName === loggedInUser.firstName
-                  ? "chat chat-end"
-                  : "chat chat-start"
-              }
-            >
-              <div className=" chat-bubble ml-0 text-left">{message}</div>
-            </div>
+            <div className= "text-[#f0f2f1] text-left wrap-break-word leading-[18px] pr-[20px]">{message}</div>
+            <div className="text-[#c9c9c9] font-medium text-[10px] min-[768px]:text-[12px] text-right mt-1 ml-2">{format(timeStamp, "MMM d , h:mm a")}</div>
           </div>
-        ))}
+        )})}
       </div>
-      <div className="flex items-center h-[10%] border-t border-gray-500/75 px-3">
+      <form
+        className="flex items-center gap-[10px] shrink-0 px-[8px] h-[56px] border-t border-gray-500/75"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSendMessage();
+        }}
+      >
         <input
           type="text"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder="Type message here..."
-          className="p-4 flex-1 mr-4 border border-gray-500/75 rounded-md h-[70%]"
+          className="flex-1 min-w-0 h-[40px] px-[8px] border-[2px] border-gray-500/75 rounded-[6px]"
         />
-        <button onClick={handleSendMessage} className="btn btn-primary">
-          send
+        <button type="submit" className="btn btn-primary h-[40px]">
+          Send
         </button>
-      </div>
+      </form>
     </div>
   );
 };

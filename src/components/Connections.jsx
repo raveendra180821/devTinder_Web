@@ -4,7 +4,9 @@ import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { addConnections } from "../utils/connectionSlice"
 import { useNavigate } from "react-router-dom"
+import { MdOutlineMessage } from "react-icons/md";
 
+const defaultPhotoUrl = "https://t4.ftcdn.net/jpg/11/68/50/57/360_F_1168505794_IBCEiafsIrHFJ09e65P2vh5115C1XI7e.jpg"
 
 const Connections = () => {
 
@@ -28,20 +30,21 @@ const Connections = () => {
     if (connections.length === 0) return <h1>No connections found</h1>
 
     return (
-        <div className="text-center mx-auto w-3xl">
-            <h1 className="text-xl font-bold my-10">Connections</h1>
-            {connections.map(con => {
-                const { _id, firstName, lastName, photoUrl, description } = con
+        <div className="text-center mx-auto w-full max-w-[768px] px-[16px]">
+            <h1 className="text-[20px] font-bold my-[24px]">Connections</h1>
+            {connections.map(connection => {
+                const { _id, firstName, lastName, photoUrl } = connection
                 return (
-                    <div key={_id} className="flex items-center h-22 w-full bg-base-300 rounded-r-xl rounded-l-[50px] mx-auto mb-4">
-                        <figure className="my-auto ml-1.5">
-                            <img alt="photo" src={photoUrl} className="w-20 h-20 rounded-full object-cover" />
+                    <div key={_id} className="flex items-center min-h-[70px] w-full bg-base-300 rounded-full mx-auto mb-4">
+                        <figure className="my-auto min-[678px]:py-[6px] ml-[6px] shrink-0">
+                            <img alt="photo" src={!photoUrl ? defaultPhotoUrl : photoUrl} className="w-[60px] h-[60px] min-[678px]:w-[70px] min-[678px]:h-[70px] rounded-full object-cover" />
                         </figure>
-                        <div className="self-center text-left mx-5 py-4 space-y-2">
-                            <h2 className="font-bold">{firstName + " " + lastName}</h2>
-                            <p className="text-sm max-w-2xl">{description}</p>
+                        <div className="self-center text-left mx-[20px]">
+                            <h2 className="font-bold text-[16px] truncate">{firstName + " " + lastName}</h2>
                         </div>
-                        <button onClick={() => {navigate("/chat/" + _id)}} className="ml-auto mr-5 btn">Message</button>
+                        <button type="button" onClick={() => {navigate("/chat/" + _id)}} data-tip={`msg ${firstName}`} className="min-[1024px]:tooltip min-[1024px]:tooltip-left ml-auto mr-[24px] shrink-0 text-[32px] cursor-pointer ">
+                            <MdOutlineMessage />
+                        </button>
                     </div>
                 )
             })}

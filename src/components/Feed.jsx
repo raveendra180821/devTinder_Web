@@ -30,15 +30,22 @@ const Feed = () => {
         }
     }, [feed])
 
-    if (isFeedEnd) return <h1>No new users on the platform. please come back after sometime</h1>
+    if (isFeedEnd) return (
+        <h1 className="text-[18px] font-bold px-[16px] py-[24px] text-center">
+            No new users on the platform. Please come back after sometime.
+        </h1>
+    )
 
-    if (!feed || feed.length === 0) return <h1>Loading . . .</h1>
-
+    if (!feed || feed.length === 0) return (
+        <h1 className="text-[18px] font-bold px-[16px] py-[24px] text-center">
+            Loading...
+        </h1>
+    )
 
 
     return (
 
-        <div className='h-full flex item-center'>
+        <div className="flex items-center justify-center w-full min-h-full px-[16px]">
             <FeedUserCard data={feed[0]} />
         </div>
     )

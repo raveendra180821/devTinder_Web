@@ -15,67 +15,40 @@ const Login = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const handleLogin = async () => {
-        if (!userName & !password) return setErrMsg("Please enter Username & password")
-        if (!userName) return setErrMsg("Please enter Username")
-        if (!password) return setErrMsg("Please enter Password")
-        setErrMsg("")
+    const handleSubmit = async () => {
+        setErrMsg("");
         try {
-            const res = await axios.post(
-                BASE_URL + "/login",
-                {
-                    email: userName,
-                    password
-                },
-                { withCredentials: true }
-            )
+            const url = isLoginForm ? "/login" : "/signup";
+            const body = isLoginForm
+                ? { email: userName, password }
+                : { firstName, lastName, email: userName, password };
 
-            dispatch(addUser(res.data.data))
-            return navigate("/")
-
+            const res = await axios.post(BASE_URL + url, body, { withCredentials: true });
+            dispatch(addUser(res.data.data));
+            navigate(isLoginForm ? "/" : "/profile");
         } catch (e) {
-            if (e.status === 400) {
-                setErrMsg("* " + e?.response?.data?.message)
+            const errMessage = e.response?.data?.message;
+            if (errMessage === "ValidationError") {
+                setErrMsg(e.response.data.errors[0].message);
+                return;
             }
-            else {
-                setErrMsg("Something went wrong, unable to login")
-            }
-
+            setErrMsg(errMessage || "Something went wrong");
         }
-    }
-
-    const handleSignUp = async () => {
-        try {
-            const res = await axios.post(
-                BASE_URL + "/signup",
-                { firstName, lastName, email: userName, password },
-                { withCredentials: true }
-            )
-
-            dispatch(addUser(res.data.data))
-            return navigate("/profile")
-        }
-        catch (e) {
-            if (e.response.data.message === "ValidationError") {
-                const err = e.response.data.errors[0]
-                setErrMsg(err.message)
-                return
-            }
-            setErrMsg(e.response.data.message)
-        }
-    }
+    };
 
     return (
-        <div className="mx-auto card bg-accent-content text-primary-content w-96">
+        <div className="mx-auto card bg-accent-content text-primary-content w-full max-w-[384px]">
             <div className="card-body">
-                <h2 className="card-title mx-auto">{isLoginForm ? "LOGIN" : "SIGN UP"}</h2>
+                <h2 className="card-title mx-auto text-[20px] justify-center w-full">
+                    {isLoginForm ? "LOGIN" : "SIGN UP"}
+                </h2>
                 {!isLoginForm && (<>
                     <fieldset className="fieldset">
                         <legend className="fieldset-legend">First Name</legend>
                         <input
                             type="text"
                             value={firstName}
-                            className="input"
+                            className="input w-full min-h-[40px]"
                             placeholder="Enter First Name"
                             onChange={(e) => setFirstName(e.target.value)}
                         />
@@ -85,7 +58,7 @@ const Login = () => {
                         <input
                             type="text"
                             value={lastName}
-                            className="input"
+                            className="input w-full min-h-[40px]"
                             placeholder="Enter Last Name"
                             onChange={(e) => setLastName(e.target.value)}
                         />
@@ -96,7 +69,7 @@ const Login = () => {
                     <input
                         type="text"
                         value={userName}
-                        className="input"
+                        className="input w-full min-h-[40px]"
                         placeholder="Enter Email ID"
                         onChange={(e) => setUserName(e.target.value)}
                     />
@@ -104,19 +77,19 @@ const Login = () => {
                 <fieldset className="fieldset">
                     <legend className="fieldset-legend">Password</legend>
                     <input
-                        type="text"
+                        type="password"
                         value={password}
-                        className="input"
+                        className="input w-full min-h-[40px]"
                         placeholder="Enter Password"
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </fieldset>
-                <span className='text-red-400 font-bold'>{errMsg}</span>
-                <div className="card-actions justify-center mt-5">
+                <p className="min-h-[20px] text-[14px] font-bold text-red-400">{errMsg}</p>
+                <div className="card-actions justify-center mt-2">
                     <button
-                        className="btn w-40"
-                        onClick={isLoginForm ? handleLogin : handleSignUp}
-                        disabled={!isLoginForm && (!firstName || !lastName || !userName || !password)}
+                        className="btn btn-primary w-full min-h-[40px]"
+                        onClick={handleSubmit}
+                        disabled={isLoginForm ? (!userName || !password) : (!firstName || !lastName || !userName || !password)}
                     >
                         {isLoginForm ? "Login" : "Sign up"}
                     </button>
