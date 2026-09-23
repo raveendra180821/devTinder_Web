@@ -49,7 +49,7 @@ const Chat = () => {
   useEffect(() => {
     if (!loggedInUserId || !targetUserId) return;
 
-    const socket = io(BASE_URL + "/socket.io", { withCredentials: true });
+    const socket = io(BASE_URL, { withCredentials: true });
     socketRef.current = socket;
 
     socket.on("connect", () => {

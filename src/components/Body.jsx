@@ -9,6 +9,7 @@ import { BASE_URL } from '../utils/constants'
 import { addUser } from '../utils/userSlice'
 
 
+
 const Body = ({ children }) => {
 
     const dispatch = useDispatch()
@@ -24,7 +25,7 @@ const Body = ({ children }) => {
             dispatch(addUser(res.data))
         }
         catch (e) {
-            if (e.response?.status === 401){
+            if (e.response?.status === 401) {
                 navigate('/login')
             }
             console.dir(e)
@@ -39,9 +40,7 @@ const Body = ({ children }) => {
     return (
         <div className='flex flex-col w-full min-h-[100dvh]'>
             <NavBar />
-            <main className='flex-1 w-full min-h-0 text-center px-[1px]'>
-                <Outlet />
-            </main>
+            <Outlet />
             <Footer />
         </div>
     )
