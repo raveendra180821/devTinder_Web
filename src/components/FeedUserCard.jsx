@@ -2,11 +2,12 @@ import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
 import { removeUserFromFeed } from "../utils/feedSlice";
+import { useState } from "react";
 
 const defaultPhotoUrl =
   "https://t4.ftcdn.net/jpg/11/68/50/57/360_F_1168505794_IBCEiafsIrHFJ09e65P2vh5115C1XI7e.jpg";
 
-const FeedUserCard = ({ data }) => {
+const FeedUserCard = ({ data, showLoader }) => {
   const {
     _id,
     firstName,
@@ -29,19 +30,23 @@ const FeedUserCard = ({ data }) => {
         {},
         { withCredentials: true },
       );
+      showLoader()
+
       dispatch(removeUserFromFeed(id));
+
     } catch (e) {
       console.dir(e);
     }
   };
 
   return (
-    <div className="mx-auto w-full max-w-[340px] rounded-[8px]">
+    <div className="mx-auto w-full max-w-[340px] min-[768px]:h-[562px] rounded-[8px]">
       {selfCard && (
         <p className="py-[8px] px-[8px] text-center text-[14px]">
           This is how your card visible to others
         </p>
       )}
+
       <div className="card bg-base-300 w-full shadow-sm overflow-hidden">
         <figure className="h-[300px] w-full overflow-hidden">
           <img
@@ -94,7 +99,9 @@ const FeedUserCard = ({ data }) => {
               type="button"
               disabled={selfCard}
               className="btn btn-primary min-h-[40px] px-[12px]"
-              onClick={() => handleSendOrIgnoreRequest("interested", _id)}
+              onClick={() => {
+                handleSendOrIgnoreRequest("interested", _id)
+              }}
             >
               Send Request
             </button>
