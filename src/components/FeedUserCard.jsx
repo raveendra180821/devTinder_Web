@@ -31,9 +31,7 @@ const FeedUserCard = ({ data, showLoader }) => {
         { withCredentials: true },
       );
       showLoader()
-
       dispatch(removeUserFromFeed(id));
-
     } catch (e) {
       console.dir(e);
     }

@@ -73,7 +73,7 @@ const Profile = () => {
         setShowNotification(true);
         setTimeout(() => {
           setShowNotification(false);
-        }, 3000);
+        }, 5000);
       }
     } catch (e) {
       if (e.response?.data?.message === "ValidationError") {
@@ -232,7 +232,7 @@ const Profile = () => {
                 id="gender"
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
-                className="select w-full min-h-[40px] text-[14px] text-[#c3cdd6] text-left bg-transparent outline-none"
+                className="select w-full min-h-[40px] text-[14px] text-[#000] text-left bg-white outline-none"
               >
                 <option value="" disabled>
                   Select gender
@@ -307,11 +307,13 @@ const Profile = () => {
         </div>
 
         {showNotification && (
-          <div className="toast toast-top toast-center mt-[24px]">
-            <div className="alert alert-success">
-              <span>Profile updated successfully</span>
+          
+            <div className="toast toast-top toast-center mt-[24px] w-58">
+              <div className="alert alert-success">
+                <span className="font-bold">Profile updated successfully</span>
+              </div>
+              <p className="bg-amber-50 text-slate-600 p-3 wrap-break-word text-center">Click on DevTinder logo <span className="font-bold text-[#102859]">navigate to feed</span></p>
             </div>
-          </div>
         )}
       </div>
     </div>

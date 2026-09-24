@@ -46,54 +46,58 @@ const Login = () => {
     }
 
     return (
-        <div style={{ backgroundImage: `url(${images.login})` }} className='w-full min-h-[calc(100dvh-128px)] bg-center bg-cover flex items-center gap-[40px]'>
-            <div className='ml-[45%] border border-white/60 h-[calc(100dvh-300px)]'></div>
+        <div style={{ backgroundImage: `url(${images.login})` }} className='w-full min-h-[calc(100dvh-128px)] bg-center bg-cover flex items-center gap-[40px] p-3'>
+            <div className='max-[768px]:hidden ml-[45%] border border-white/60 h-[calc(100dvh-300px)]'></div>
             {isSwitching
                 ? <span className="loading loading-ring loading-md ml-[225px]"></span>
                 : (
-                    <div className="card bg-[#082a61]/90  text-primary-content w-full max-w-[450px]">
+                    <form 
+                    onSubmit={(e) => {
+                        e.preventDefault()
+                    }}
+                    className="card bg-[#082a61]/90  text-primary-content w-full max-w-[450px] max-[768px]:mx-auto">
                         <div className="card-body">
                             <h2 className="card-title mx-auto text-[20px] justify-center w-full">
                                 {isLoginForm ? "LOGIN" : "SIGN UP"}
                             </h2>
                             {!isLoginForm && (<>
                                 <fieldset className="fieldset">
-                                    <legend className="fieldset-legend">First Name</legend>
+                                    <legend className="fieldset-legend text-[13px]">First Name</legend>
                                     <input
                                         type="text"
                                         value={firstName}
-                                        className="input w-full min-h-[40px] bg-white/10 outline-none"
+                                        className="input font-bold placeholder:font-medium w-full min-h-[40px] bg-white/10 outline-none"
                                         placeholder="Enter First Name"
                                         onChange={(e) => setFirstName(e.target.value)}
                                     />
                                 </fieldset>
                                 <fieldset className="fieldset">
-                                    <legend className="fieldset-legend">Last Name</legend>
+                                    <legend className="fieldset-legend text-[13px]">Last Name</legend>
                                     <input
                                         type="text"
                                         value={lastName}
-                                        className="input w-full min-h-[40px] bg-white/10 outline-none"
+                                        className="input font-bold placeholder:font-medium w-full min-h-[40px] bg-white/10 outline-none"
                                         placeholder="Enter Last Name"
                                         onChange={(e) => setLastName(e.target.value)}
                                     />
                                 </fieldset>
                             </>)}
                             <fieldset className="fieldset">
-                                <legend className="fieldset-legend">Username</legend>
+                                <legend className="fieldset-legend text-[13px]">Username</legend>
                                 <input
                                     type="text"
                                     value={userName}
-                                    className="input w-full min-h-[40px] bg-white/10 outline-none"
+                                    className="input font-bold placeholder:font-medium w-full min-h-[40px] bg-white/10 outline-none required:border-red-700"
                                     placeholder="Enter Email ID"
                                     onChange={(e) => setUserName(e.target.value)}
                                 />
                             </fieldset>
                             <fieldset className="fieldset">
-                                <legend className="fieldset-legend">Password</legend>
+                                <legend className="fieldset-legend text-[13px]">Password</legend>
                                 <input
                                     type="password"
                                     value={password}
-                                    className="input w-full min-h-[40px] bg-white/10 outline-none"
+                                    className="input font-bold placeholder:font-medium w-full min-h-[40px] bg-white/10 outline-none"
                                     placeholder="Enter Password"
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
@@ -119,10 +123,12 @@ const Login = () => {
                                 {isLoginForm ? "New User? Sign up here" : "Existing User? Login here"}
                             </p>
                         </div>
-                    </div>
+                    </form>
                 )}
         </div>
     )
 }
 
 export default Login
+
+

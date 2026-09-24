@@ -3,7 +3,7 @@ import { BASE_URL } from "../utils/constants"
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { addConnections } from "../utils/connectionSlice"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { MdOutlineMessage } from "react-icons/md";
 import images from "../utils/images"
 
@@ -27,18 +27,23 @@ const Connections = () => {
     }, [])
 
     return (
-        <div style={{ backgroundImage: `url(${images.requests})` }} className="bg-center bg-cover w-full min-h-[calc(100dvh-128px)]">
+        <div style={{ backgroundImage: `url(${images.connections})` }} className="bg-center bg-cover w-full min-h-[calc(100dvh-128px)]">
             {
                 !connections || connections.length === 0
-                    ? <h1 className="text-[14px] min-[768px]:text-[16px] text-center mt-[20px]">No connections found</h1>
+                    ? <div className="flex flex-col justify-center items-center">
+                        <h1 className="text-[14px] min-[768px]:text-[16px] mt-[20px]">No connections found</h1>
+                        <Link to='/' className="mt-4">
+                            <button type="button" className="btn btn-primary">Go to Feed</button>
+                        </Link>
+                    </div>
                     : (
                         <div className="text-center mx-auto w-full max-w-[768px] px-[16px]">
                             <h1 className="text-[20px] font-bold my-[24px]">Connections</h1>
                             {connections.map(connection => {
                                 const { _id, firstName, lastName, photoUrl } = connection
                                 return (
-                                    <div key={_id} className="flex items-center min-h-[70px] w-full bg-[#0f4783] rounded-full mx-auto mb-4">
-                                        <figure className="my-auto min-[678px]:py-[6px] ml-[6px] shrink-0">
+                                    <div key={_id} className="flex items-center min-h-[70px] w-full bg-[#08396e] rounded-l-[40px] rounded-r-[10px] mx-auto mb-4">
+                                        <figure className="min-[678px]:py-[6px] ml-[6px] shrink-0">
                                             <img alt="photo" src={!photoUrl ? defaultPhotoUrl : photoUrl} className="w-[60px] h-[60px] min-[678px]:w-[70px] min-[678px]:h-[70px] rounded-full object-cover" />
                                         </figure>
                                         <div className="self-center text-left mx-[20px]">

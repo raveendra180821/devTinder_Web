@@ -37,7 +37,7 @@ const Requests = () => {
 
 
   return (
-    <div style={{ backgroundImage: `url(${images.requests})` }} className="w-full min-h-[calc(100dvh-128px)] bg-center bg-cover">
+    <div style={{ backgroundImage: `url(${images.main})` }} className="w-full min-h-[calc(100dvh-128px)] bg-center bg-cover">
       {
         !requests || requests.length === 0
           ? <h1 className="text-[14px] min-[768px]:text-[16px] text-center mt-[20px]">No Requests Found</h1>
@@ -47,11 +47,11 @@ const Requests = () => {
               {requests.map(req => {
                 const { _id, firstName, lastName, photoUrl, role } = req.fromUserId
                 return (
-                  <div key={_id} className="flex items-center min-h-[70px] w-full rounded-r-xl rounded-l-[50px] bg-[#08396e] pl-[8px] pr-[12px] py-[8px] mb-[16px]">
-                    <figure className="shrink-0">
+                  <div key={_id} className="flex items-center min-h-[70px] w-full rounded-r-xl rounded-l-[50px] bg-[#08396e] pr-[12px] mb-[16px]">
+                    <figure className="min-[678px]:py-[6px] ml-[6px] shrink-0">
                       <img alt="photo" src={photoUrl} className="w-[60px] h-[60px] min-[678px]:w-[70px] min-[678px]:h-[70px] rounded-full object-cover" />
                     </figure>
-                    <div className="flex-1 px-[12px] text-left">
+                    <div className="flex-1 pl-[20px] text-left">
                       <h2 className="font-bold text-[16px] truncate">{firstName + " " + lastName}</h2>
                     </div>
                     <div className="flex shrink-0 gap-[12px]">

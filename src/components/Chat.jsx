@@ -87,7 +87,7 @@ const Chat = () => {
 
   if (!targetUser) {
     return (
-      <div className="mx-auto flex flex-col w-full max-w-[340px] h-[calc(100dvh-128)] items-center mt-[20px]">
+      <div className="mx-auto flex flex-col w-full max-w-[500px] h-[calc(100dvh-128px)] items-center mt-[20px]">
         <p className="text-[16px]">Something went wrong, Go back and open the connection again</p>
         <button onClick={() => navigate("/connections")} type="button" className="btn btn-success w-fit mt-[10px]">Back</button>
       </div>
@@ -104,7 +104,7 @@ const Chat = () => {
           />
           <h1 className="flex-1 text-[16px] min-w-0 truncate text-left font-bold">{targetUser?.firstName + " " + targetUser?.lastName}</h1>
         </div>
-        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-[8px]">
+        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden scrollbar-none p-[8px]">
           {messages.map(({ senderId, message, timeStamp }, index) => {
             console.log(timeStamp)
             return (
