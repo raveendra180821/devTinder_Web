@@ -95,8 +95,8 @@ const Chat = () => {
   }
   return (
     <div style={{backgroundImage: `url(${images.chat})`}} className=" flex items-center bg-center bg-cover h-[calc(100dvh-128px)]">
-      <div className="mx-auto flex flex-col mt-[10px] h-[90%] w-full max-w-[768px] bg-blue-300/20 rounded-lg">
-        <div className="flex items-center shrink-0 px-[8px] h-[56px] border-b border-gray-500/75 ">
+      <div className="mx-auto flex flex-col mt-[10px] h-[90%] w-full max-w-[768px] rounded-lg">
+        <div className="flex items-center shrink-0 px-[8px] h-[56px] border-b border-gray-500/75 bg-[#5071b3] min-[768px]:rounded-t-lg ">
           <img
             src={targetUser?.photoUrl || ""}
             alt="profile"
@@ -104,14 +104,13 @@ const Chat = () => {
           />
           <h1 className="flex-1 text-[16px] min-w-0 truncate text-left font-bold">{targetUser?.firstName + " " + targetUser?.lastName}</h1>
         </div>
-        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden scrollbar-none p-[8px]">
+        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden scrollbar-none p-[8px] bg-blue-300/20">
           {messages.map(({ senderId, message, timeStamp }, index) => {
-            console.log(timeStamp)
             return (
 
               <div
                 key={index}
-                className={`w-fit max-w-[75%] font-medium my-[10px] p-[8px] rounded-t-[14px] ${senderId === loggedInUserId ? "bg-[#387549] rounded-bl-[14px] ml-auto" : "bg-[#636262] rounded-br-[14px]"}`}
+                className={`w-fit max-w-[75%] font-medium my-[10px] p-[8px] rounded-t-[14px] ${senderId === loggedInUserId ? "bg-[#387549] rounded-bl-[14px] ml-auto" : "bg-[#5e5959] rounded-br-[14px]"}`}
               >
                 <div className="text-[#f0f2f1] text-left wrap-break-word leading-[18px] pr-[20px]">{message}</div>
                 <div className="text-[#c9c9c9] font-medium text-[10px] min-[768px]:text-[12px] text-right mt-1 ml-2">{format(timeStamp, "MMM d , h:mm a")}</div>
@@ -120,7 +119,7 @@ const Chat = () => {
           })}
         </div>
         <form
-          className="flex items-center gap-[10px] shrink-0 px-[8px] h-[66px] bg-[#5071b3] rounded-b-lg"
+          className="flex items-center gap-[10px] shrink-0 px-[8px] h-[66px] bg-[#5071b3] min-[768px]:rounded-b-lg"
           onSubmit={(e) => {
             e.preventDefault();
             handleSendMessage();
@@ -131,7 +130,7 @@ const Chat = () => {
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             placeholder="Type message here..."
-            className="flex-1 min-w-0 h-[50px] px-[8px] rounded-[6px] outline-none bg-[#3c4a66] text-[#fff] font-medium"
+            className="flex-1 min-w-0 h-[50px] px-[10px] rounded-[6px] outline-none bg-[#3c4a66] text-[#fff] font-medium"
           />
           <button type="submit" className="btn border-none bg-pink-400 h-[50px] px-[20px]">
             Send
