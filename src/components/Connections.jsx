@@ -40,7 +40,8 @@ const Connections = () => {
                         <div className="text-center mx-auto w-full max-w-[768px] px-[16px]">
                             <h1 className="text-[20px] font-bold my-[24px]">Connections</h1>
                             {connections.map(connection => {
-                                const { _id, firstName, lastName, photoUrl } = connection
+                                const { _id, firstName, lastName, photoUrl, status } = connection
+                                console.log(firstName, status)
                                 return (
                                     <div key={_id} className="flex items-center min-h-[70px] w-full bg-[#08396e] rounded-l-[40px] rounded-r-[10px] mx-auto mb-4">
                                         <figure className="min-[678px]:py-[6px] ml-[6px] shrink-0">
@@ -49,9 +50,12 @@ const Connections = () => {
                                         <div className="self-center text-left mx-[20px]">
                                             <h2 className="font-bold text-[16px] truncate">{firstName + " " + lastName}</h2>
                                         </div>
-                                        <button type="button" onClick={() => { navigate("/chat/" + _id) }} data-tip={`msg ${firstName}`} className="min-[1024px]:tooltip min-[1024px]:tooltip-left ml-auto mr-[24px] shrink-0 text-[32px] cursor-pointer ">
-                                            <MdOutlineMessage />
-                                        </button>
+                                        <div className="flex items-center justify-center gap-6 ml-auto mr-[24px] shrink-0">
+                                            <span data-tip={status ? "Online": "Offline"} className={`lg:tooltip lg:tooltip-top w-3 h-3 text-right rounded-full bg-gray-600 ${status ? "bg-green-700" : ""}`} />
+                                            <button type="button" onClick={() => { navigate("/chat/" + _id) }} data-tip={`msg ${firstName}`} className="lg:tooltip lg:tooltip-top text-[32px] cursor-pointer ">
+                                                <MdOutlineMessage />
+                                            </button>
+                                        </div>
                                     </div>
                                 )
                             })}

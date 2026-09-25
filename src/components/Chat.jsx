@@ -1,23 +1,19 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
-import io from "socket.io-client";
+import { useParams } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 import axios from "axios";
 import { format } from "date-fns"
 import images from "../utils/images";
-
+import { useSocket } from "../utils/SocketContext";
 
 const Chat = () => {
   const { targetUserId } = useParams();
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const connections = useSelector((state) => state?.connections) || [];
-  const targetUser = connections.find((user) => user._id === targetUserId);
+  const [targetUser, setTargetUser] = useState()
   const loggedInUser = useSelector((state) => state?.user);
   const loggedInUserId = loggedInUser?._id;
-
-  const navigate = useNavigate()
 
   const fetchChatMessages = async (receiverId) => {
     try {
@@ -25,7 +21,9 @@ const Chat = () => {
         withCredentials: true,
       });
 
-      const chatMessages = res.data.map((v) => {
+      setTargetUser(() => res.data.participants.find((user) => user._id.toString() === targetUserId))
+
+      const chatMessages = res.data.messages.map((v) => {
         const { sender, message, timeStamp } = v;
         return {
           senderId: sender._id,
@@ -45,39 +43,43 @@ const Chat = () => {
     fetchChatMessages(targetUserId);
   }, []);
 
-  const socketRef = useRef(null);
+  const socket = useSocket()
 
   useEffect(() => {
-    if (!loggedInUserId || !targetUserId) return;
+    if (!socket || !loggedInUserId || !targetUserId) return
 
-    const SOCKET_BASE_URL = location.hostname === "localhost" ? BASE_URL : BASE_URL + "/socket.io"
+    const joinChat = () => {
 
-    const socket = io(SOCKET_BASE_URL, { withCredentials: true });
-    socketRef.current = socket;
-
-    socket.on("connect", () => {
       socket.emit("joinChat", {
         senderName: loggedInUser.firstName,
         senderId: loggedInUserId,
         receiverId: targetUserId,
       });
-    });
 
-    socket.on("messageRecived", (payload) => {
+    }
+
+    const handleReceivedMessage = (payload) => {
       setMessages((prev) => [...prev, payload]);
-    });
+    }
+
+    socket.connected
+      ? joinChat()
+      : socket.on("connect", joinChat)
+
+    socket.on("messageRecived", handleReceivedMessage)
 
     return () => {
-      socket.disconnect();
-      socketRef.current = null;
-    };
-  }, [loggedInUserId, targetUserId]);
+      socket.off("connect", joinChat)
+      socket.off("messageRecived", handleReceivedMessage)
+    }
+
+  }, [socket, loggedInUserId, targetUserId]);
 
   const handleSendMessage = () => {
     const text = newMessage.trim();
-    if (!text || !socketRef.current) return;
+    if (!text || !socket) return;
 
-    socketRef.current.emit("sendMessage", {
+    socket.emit("sendMessage", {
       senderFirstName: loggedInUser.firstName,
       senderLastName: loggedInUser.lastName,
       senderId: loggedInUserId,
@@ -87,25 +89,20 @@ const Chat = () => {
     setNewMessage("");
   };
 
-  if (!targetUser) {
-    return (
-      <div className="mx-auto flex flex-col w-full max-w-[500px] h-[calc(100dvh-128px)] items-center mt-[20px]">
-        <p className="text-[16px]">Something went wrong, Go back and open the connection again</p>
-        <button onClick={() => navigate("/connections")} type="button" className="btn btn-success w-fit mt-[10px]">Back</button>
-      </div>
-    )
-  }
   return (
-    <div style={{backgroundImage: `url(${images.chat})`}} className=" flex items-center bg-center bg-cover h-[calc(100dvh-128px)]">
+    <div style={{ backgroundImage: `url(${images.chat})` }} className=" flex items-center bg-center bg-cover h-[calc(100dvh-128px)]">
       <div className="mx-auto flex flex-col mt-[10px] h-[90%] w-full max-w-[768px] rounded-lg">
-        <div className="flex items-center shrink-0 px-[8px] h-[56px] border-b border-gray-500/75 bg-[#5071b3] min-[768px]:rounded-t-lg ">
-          <img
-            src={targetUser?.photoUrl || ""}
-            alt="profile"
-            className="h-[40px] w-[40px] rounded-full object-cover mr-2"
-          />
-          <h1 className="flex-1 text-[16px] min-w-0 truncate text-left font-bold">{targetUser?.firstName + " " + targetUser?.lastName}</h1>
-        </div>
+        {targetUser
+          &&
+          (<div className="flex items-center shrink-0 px-[8px] h-[56px] border-b border-gray-500/75 bg-[#5071b3] min-[768px]:rounded-t-lg ">
+            <img
+              src={targetUser?.photoUrl || ""}
+              alt="profile"
+              className="h-[40px] w-[40px] rounded-full object-cover mr-2"
+            />
+            <h1 className="flex-1 text-[16px] min-w-0 truncate text-left font-bold">{targetUser?.firstName + " " + targetUser?.lastName}</h1>
+          </div>)
+        }
         <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden scrollbar-none p-[8px] bg-blue-300/20">
           {messages.map(({ senderId, message, timeStamp }, index) => {
             return (
