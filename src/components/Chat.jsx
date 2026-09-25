@@ -50,7 +50,9 @@ const Chat = () => {
   useEffect(() => {
     if (!loggedInUserId || !targetUserId) return;
 
-    const socket = io(BASE_URL, { withCredentials: true });
+    const SOCKET_BASE_URL = location.hostname === "localhost" ? BASE_URL : BASE_URL + "/socket.io"
+
+    const socket = io(SOCKET_BASE_URL, { withCredentials: true });
     socketRef.current = socket;
 
     socket.on("connect", () => {
