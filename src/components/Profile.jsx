@@ -66,8 +66,6 @@ const Profile = () => {
       setErrMsg("");
       setErrField("");
 
-      console.log(formData)
-
       const res = await axios.patch(BASE_URL + "/profile/edit", formData, {
         withCredentials: true,
       });
@@ -107,10 +105,10 @@ const Profile = () => {
 
   return (
 
-    <div style={{ backgroundImage: `url(${images.main})` }} className="w-full min-[768px]:h-[calc(100dvh-128px)] bg-center bg-cover">
+    <div style={{ backgroundImage: `url(${images.main})` }} className="w-full min-[768px]:min-h-[calc(100dvh-128px)] bg-center bg-cover overflow-y-auto">
       {!user
         ? (
-          <div className="h-full flex justify-center items-center">
+          <div className="h-[calc(100dvh-128px)] flex justify-center items-center">
             <span className="loading loading-spinner loading-md"></span>
           </div>
         )

@@ -35,7 +35,7 @@ const NavBar = () => {
         <div className="navbar shrink-0 relative min-h-[64px] bg-[#102859] shadow-sm">
             <div className="flex-1">
                 <Link to="/">
-                    <img src={images.navLogo} alt="Logo" className='w-26 lg:w-40 h-8 lg:h-12 hover:shadow-[0_0_15px_#0f1f3f] rounded-lg' />
+                    <img src={images.navLogo} alt="Logo" className='w-24 md:w-28 lg:w-32 h-7 md:h-8 lg:h-9 hover:shadow-[0_0_15px_#0f1f3f] rounded-lg' />
                 </Link>
             </div>
             {user && (

@@ -41,7 +41,6 @@ const Connections = () => {
                             <h1 className="text-[20px] font-bold my-[24px]">Connections</h1>
                             {connections.map(connection => {
                                 const { _id, firstName, lastName, photoUrl, status } = connection
-                                console.log(firstName, status)
                                 return (
                                     <div key={_id} className="flex items-center min-h-[70px] w-full bg-[#08396e] rounded-l-[40px] rounded-r-[10px] mx-auto mb-4">
                                         <figure className="min-[678px]:py-[6px] ml-[6px] shrink-0">

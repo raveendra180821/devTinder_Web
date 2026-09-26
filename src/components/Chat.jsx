@@ -22,7 +22,7 @@ const Chat = () => {
       });
 
       setTargetUser(() => res.data.participants.find((user) => user?._id?.toString() === targetUserId))
-
+      console.dir(res)
       const chatMessages = res.data.messages.map((v) => {
         const { sender, message, timeStamp } = v;
         return {
@@ -41,8 +41,6 @@ const Chat = () => {
 
   useEffect(() => {
     fetchChatMessages(targetUserId);
-    fetchChatMessages(targetUserId)
-
   }, []);
 
   const socket = useSocket()
