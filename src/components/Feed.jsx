@@ -55,7 +55,7 @@ const Feed = () => {
 
     return (
 
-        <div style={{backgroundImage: `url(${images.main})`}} className="bg-cover flex flex-col items-center bg-white pt-8 lg:pt-20 w-full h-[calc(100dvh-128px)] px-[16px]">
+        <div style={{backgroundImage: `url(${images.main})`}} className="bg-cover flex flex-col items-center bg-white pt-8 lg:pt-14 w-full h-[calc(100dvh-128px)] px-[16px]">
             <span className='border-2 border-purple-700 w-20 h-0.5 rounded-lg' />
             <h1 className='text-xl lg:text-3xl font-bold mt-6'>Discover Developers</h1>
             <p className='text-sm lg:text-[16px] font-bold text-gray-400 mt-3 mb-5'><span>{`${feed.length} developers`}</span> left in your feed</p>

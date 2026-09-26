@@ -5,9 +5,11 @@ import { addUser } from "../utils/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import FeedUserCard from "./FeedUserCard";
 import images from "../utils/images";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const user = useSelector((state) => state.user);
+  const navigate = useNavigate()
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -24,8 +26,7 @@ const Profile = () => {
   const [showNotification, setShowNotification] = useState(false);
 
   const inputClass = (field) =>
-    `input w-full min-h-[40px] text-[14px] text-[#c3cdd6] text-left bg-transparent outline-none ${errField === field ? "border-red-400" : ""
-    }`;
+    `input w-full min-h-[40px] text-[14px] text-[#c3cdd6] text-left bg-transparent outline-none ${errField === field ? "border-red-400" : ""} ${field === "age" ? "[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" : ""}`;
 
   const dispatch = useDispatch();
 
@@ -65,6 +66,8 @@ const Profile = () => {
       setErrMsg("");
       setErrField("");
 
+      console.log(formData)
+
       const res = await axios.patch(BASE_URL + "/profile/edit", formData, {
         withCredentials: true,
       });
@@ -102,220 +105,223 @@ const Profile = () => {
     }
   }, [user]);
 
-  if (!user) {
-    return (
-      <div className="py-[24px] text-[16px] text-center">Loading profile...</div>
-    );
-  }
-
   return (
-    <div style={{ backgroundImage: `url(${images.main})` }} className="w-full min-[768px]:min-h-[calc(100dvh-128px)] bg-center bg-cover">
-      <div className="flex flex-col min-[768px]:flex-row min-[768px]:flex-wrap items-center min-[768px]:items-start w-full max-w-[1100px] mx-auto px-[16px] py-[16px] gap-[24px] text-left">
-        <fieldset className="fieldset shadow-[0_0_10px_#d6d6d6]/60 bg-blue-950/60 rounded-box w-full min-[768px]:w-[calc(50%-12px)] p-[16px]">
-          <legend className="fieldset-legend text-[18px] px-[8px]">
-            Update your profile
-          </legend>
 
-          <div className="flex flex-col min-[640px]:flex-row gap-[12px] w-full">
-            <div className="flex-1 min-w-0">
-              <label className="label text-[14px] mb-[6px]" htmlFor="firstName">
-                First Name
-              </label>
-              <input
-                id="firstName"
-                type="text"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                onFocus={() => setErrField("")}
-                className={inputClass("firstName")}
-                placeholder="First name"
-              />
-            </div>
-            <div className="flex-1 min-w-0">
-              <label className="label text-[14px] mb-[6px]" htmlFor="lastName">
-                Last Name
-              </label>
-              <input
-                id="lastName"
-                type="text"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                onFocus={() => setErrField("")}
-                className={inputClass("lastName")}
-                placeholder="Last name"
-              />
-            </div>
+    <div style={{ backgroundImage: `url(${images.main})` }} className="w-full min-[768px]:h-[calc(100dvh-128px)] bg-center bg-cover">
+      {!user
+        ? (
+          <div className="h-full flex justify-center items-center">
+            <span className="loading loading-spinner loading-md"></span>
           </div>
+        )
+        : (
+          <div className="flex flex-col min-[768px]:flex-row min-[768px]:flex-wrap items-center min-[768px]:items-start w-full max-w-[1100px] mx-auto px-[16px] py-[16px] gap-[24px] text-left">
+            <fieldset className="fieldset shadow-[0_0_10px_#d6d6d6]/60 bg-blue-950/60 rounded-box w-full min-[768px]:w-[calc(50%-12px)] p-[16px]">
+              <legend className="fieldset-legend text-[18px] px-[8px]">
+                Update your profile
+              </legend>
 
-          <div className="flex flex-col min-[640px]:flex-row gap-[12px] w-full mt-[12px]">
-            <div className="flex-1 min-w-0">
-              <label className="label text-[14px] mb-[6px]" htmlFor="designation">
-                Designation
-              </label>
-              <input
-                id="designation"
-                type="text"
-                value={designation}
-                onChange={(e) => setDesignation(e.target.value)}
-                onFocus={() => setErrField("")}
-                className={inputClass("designation")}
-                placeholder="What is your role?"
-              />
-            </div>
-            <div className="flex-1 min-w-0">
-              <label className="label text-[14px] mb-[6px]" htmlFor="companyName">
-                Company Name
-              </label>
-              <input
-                id="companyName"
-                type="text"
-                value={companyName}
-                onChange={(e) => setCompanyName(e.target.value)}
-                onFocus={() => setErrField("")}
-                className={inputClass("companyName")}
-                placeholder="Where are you working?"
-              />
-            </div>
-          </div>
-
-          <div className="flex flex-col min-[640px]:flex-row gap-[12px] w-full mt-[12px]">
-            <div className="flex-[3] min-w-0">
-              <label className="label text-[14px] mb-[6px]" htmlFor="skills">
-                Skills
-              </label>
-              <input
-                id="skills"
-                type="text"
-                value={skills}
-                onChange={(e) => setSkills(e.target.value)}
-                onFocus={() => setErrField("")}
-                className={inputClass("skills")}
-                placeholder="Ex: JavaScript, React, Node.js"
-              />
-            </div>
-            <div className="flex-1 min-w-0">
-              <label className="label text-[14px] mb-[6px]" htmlFor="age">
-                Age
-              </label>
-              <input
-                id="age"
-                type="text"
-                value={age}
-                onChange={(e) => setAge(e.target.value)}
-                onFocus={() => setErrField("")}
-                className={inputClass("age")}
-                placeholder="Age"
-              />
-            </div>
-          </div>
-
-          <div className="flex flex-col min-[640px]:flex-row gap-[12px] w-full mt-[12px]">
-            <div className="flex-[3] min-w-0">
-              <label className="label text-[14px] mb-[6px]" htmlFor="email">
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onFocus={() => setErrField("")}
-                className={inputClass("email")}
-                placeholder="Email address"
-              />
-            </div>
-            <div className="flex-1 min-w-0">
-              <label className="label text-[14px] mb-[6px]" htmlFor="gender">
-                Gender
-              </label>
-              <select
-                id="gender"
-                value={gender}
-                onChange={(e) => setGender(e.target.value)}
-                className="select w-full min-h-[40px] text-[14px] text-[#000] text-left bg-white outline-none"
-              >
-                <option value="" disabled>
-                  Select gender
-                </option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-          </div>
-
-          <label className="label text-[14px] mt-[12px] mb-[6px]" htmlFor="photoUrl">
-            Photo URL
-          </label>
-          <input
-            id="photoUrl"
-            type="text"
-            value={photoUrl}
-            onChange={(e) => setPhotoUrl(e.target.value)}
-            onFocus={() => setErrField("")}
-            className={inputClass("photoUrl")}
-            placeholder="Photo URL"
-          />
-
-          <label className="label text-[14px] mt-[12px] mb-[6px]" htmlFor="about">
-            About
-          </label>
-          <textarea
-            id="about"
-            name="about"
-            rows="4"
-            value={about}
-            onChange={(e) => setAbout(e.target.value)}
-            className="textarea w-full min-h-[96px] p-[12px] text-[14px] text-[#c3cdd6] text-left bg-transparent outline-none"
-            placeholder="Write about you..."
-          />
-        </fieldset>
-
-        <div className="w-full min-[768px]:w-[calc(50%-12px)] flex justify-center min-[768px]:justify-start">
-          <FeedUserCard
-            data={{
-              firstName,
-              lastName,
-              gender,
-              age,
-              photoUrl,
-              about,
-              designation,
-              companyName,
-              selfCard: true,
-            }}
-          />
-        </div>
-
-        <div className="flex flex-col items-center w-full min-[768px]:w-[calc(50%-12px)]">
-          {errMsg && (
-            <p className="font-bold text-[14px] text-red-600 mb-[8px]">{errMsg}</p>
-          )}
-          <button
-            type="button"
-            onClick={handleSaveProfileUpdates}
-            disabled={
-              !formData.firstName ||
-              !formData.lastName ||
-              !formData.email ||
-              isProfileUnchanged
-            }
-            className="btn btn-wide btn-primary min-h-[40px]"
-          >
-            Save Updates
-          </button>
-        </div>
-
-        {showNotification && (
-          
-            <div className="toast toast-top toast-center mt-[24px] w-58">
-              <div className="alert alert-success">
-                <span className="font-bold">Profile updated successfully</span>
+              <div className="flex flex-col min-[640px]:flex-row gap-[12px] w-full">
+                <div className="flex-1 min-w-0">
+                  <label className="label text-[14px] mb-[6px]" htmlFor="firstName">
+                    First Name
+                  </label>
+                  <input
+                    id="firstName"
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    onFocus={() => setErrField("")}
+                    className={inputClass("firstName")}
+                    placeholder="First name"
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <label className="label text-[14px] mb-[6px]" htmlFor="lastName">
+                    Last Name
+                  </label>
+                  <input
+                    id="lastName"
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    onFocus={() => setErrField("")}
+                    className={inputClass("lastName")}
+                    placeholder="Last name"
+                  />
+                </div>
               </div>
-              <p className="bg-amber-50 text-slate-600 p-3 wrap-break-word text-center">Click on DevTinder logo <span className="font-bold text-[#102859]">navigate to feed</span></p>
+
+              <div className="flex flex-col min-[640px]:flex-row gap-[12px] w-full mt-[12px]">
+                <div className="flex-1 min-w-0">
+                  <label className="label text-[14px] mb-[6px]" htmlFor="designation">
+                    Designation
+                  </label>
+                  <input
+                    id="designation"
+                    type="text"
+                    value={designation}
+                    onChange={(e) => setDesignation(e.target.value)}
+                    onFocus={() => setErrField("")}
+                    className={inputClass("designation")}
+                    placeholder="What is your role?"
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <label className="label text-[14px] mb-[6px]" htmlFor="companyName">
+                    Company Name
+                  </label>
+                  <input
+                    id="companyName"
+                    type="text"
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                    onFocus={() => setErrField("")}
+                    className={inputClass("companyName")}
+                    placeholder="Where are you working?"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col min-[640px]:flex-row gap-[12px] w-full mt-[12px]">
+                <div className="flex-[3] min-w-0">
+                  <label className="label text-[14px] mb-[6px]" htmlFor="skills">
+                    Skills
+                  </label>
+                  <input
+                    id="skills"
+                    type="text"
+                    value={skills}
+                    onChange={(e) => setSkills(e.target.value)}
+                    onFocus={() => setErrField("")}
+                    className={inputClass("skills")}
+                    placeholder="Ex: JavaScript, React, Node.js"
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <label className="label text-[14px] mb-[6px]" htmlFor="age">
+                    Age
+                  </label>
+                  <input
+                    id="age"
+                    type="number"
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
+                    onFocus={() => setErrField("")}
+                    className={inputClass("age")}
+                    placeholder="Age"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col min-[640px]:flex-row gap-[12px] w-full mt-[12px]">
+                <div className="flex-[3] min-w-0">
+                  <label className="label text-[14px] mb-[6px]" htmlFor="email">
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    onFocus={() => setErrField("")}
+                    className={inputClass("email")}
+                    placeholder="Email address"
+                  />
+                </div>
+                <div className="flex-1 min-w-34">
+                  <label className="label text-[14px] mb-[6px]" htmlFor="gender">
+                    Gender
+                  </label>
+                  <select
+                    id="gender"
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value)}
+                    className="select w-full min-h-[40px] text-[14px] text-[#000] text-left bg-white outline-none"
+                  >
+                    <option value="" disabled>
+                      Select gender
+                    </option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <label className="label text-[14px] mt-[12px] mb-[6px]" htmlFor="photoUrl">
+                Photo URL
+              </label>
+              <input
+                id="photoUrl"
+                type="text"
+                value={photoUrl}
+                onChange={(e) => setPhotoUrl(e.target.value)}
+                onFocus={() => setErrField("")}
+                className={inputClass("photoUrl")}
+                placeholder="Photo URL"
+              />
+
+              <label className="label text-[14px] mt-[12px] mb-[6px]" htmlFor="about">
+                About
+              </label>
+              <textarea
+                id="about"
+                name="about"
+                rows="4"
+                value={about}
+                onChange={(e) => setAbout(e.target.value)}
+                className="textarea w-full min-h-[96px] p-[12px] text-[14px] text-[#c3cdd6] text-left bg-transparent outline-none"
+                placeholder="Write about you..."
+              />
+            </fieldset>
+
+            <div className="w-full min-[768px]:w-[calc(50%-12px)] flex justify-center min-[768px]:justify-start">
+              <FeedUserCard
+                data={{
+                  firstName,
+                  lastName,
+                  gender,
+                  age,
+                  photoUrl,
+                  about,
+                  designation,
+                  companyName,
+                  selfCard: true,
+                }}
+              />
             </div>
+
+            <div className="flex flex-col items-center w-full min-[768px]:w-[calc(50%-12px)]">
+              {errMsg && (
+                <p className="font-bold text-[14px] text-red-600 mb-[8px]">{errMsg}</p>
+              )}
+              <button
+                type="button"
+                onClick={handleSaveProfileUpdates}
+                disabled={
+                  !formData.firstName ||
+                  !formData.lastName ||
+                  !formData.email ||
+                  isProfileUnchanged
+                }
+                className="btn btn-wide btn-primary min-h-[40px]"
+              >
+                Save Updates
+              </button>
+            </div>
+
+            {showNotification && (
+
+              <div className="toast toast-top toast-center mt-[24px] w-58">
+                <div className="alert alert-success">
+                  <span className="font-bold">Profile updated successfully</span>
+                </div>
+                <p className="text-sm md:text-md bg-amber-50 text-slate-600 p-3 wrap-break-word text-center">Click on DevTinder logo <span className="font-bold text-[#102859]">navigate to feed</span></p>
+              </div>
+            )}
+          </div>
         )}
-      </div>
     </div>
   );
 };
