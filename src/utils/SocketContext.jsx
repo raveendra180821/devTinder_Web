@@ -17,7 +17,6 @@ if (isProduction) {
 }
 
 export const SocketContextProvider = ({ children }) => {
-    console.log("🔥 SocketContextProvider rendered");
 
     const user = useSelector(state => state.user)
 
@@ -27,16 +26,10 @@ export const SocketContextProvider = ({ children }) => {
 
         if (!user?._id) return
 
-        console.log("socket created")
-
         const newSocket = io(SOCKET_URL, socketOptions)
 
         newSocket.on("connect", () => {
             newSocket.emit("userOnline", {userId: user._id})
-        })
-
-        newSocket.on("disconnect", () => {
-            newSocket.emit("userOffline", {userId: user._id})
         })
 
         setSocket(newSocket)
