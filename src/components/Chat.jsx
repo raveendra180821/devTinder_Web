@@ -21,7 +21,7 @@ const Chat = () => {
         withCredentials: true,
       });
 
-      setTargetUser(() => res.data.participants.find((user) => user._id.toString() === targetUserId))
+      setTargetUser(() => res.data.participants.find((user) => user?._id?.toString() === targetUserId))
 
       const chatMessages = res.data.messages.map((v) => {
         const { sender, message, timeStamp } = v;
@@ -41,6 +41,8 @@ const Chat = () => {
 
   useEffect(() => {
     fetchChatMessages(targetUserId);
+    fetchChatMessages(targetUserId)
+
   }, []);
 
   const socket = useSocket()
