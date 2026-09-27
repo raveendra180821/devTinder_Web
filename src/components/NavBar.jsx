@@ -56,7 +56,7 @@ const NavBar = () => {
       </div>
       {user && (
         <div className="flex gap-2 items-center">
-          <div className="flex items-center text-white-900 text-sm gap-8 mr-3">
+          <div className="max-[648px]:hidden flex items-center text-white-900 text-sm gap-8 mr-3">
             <div className="dropdown dropdown-hover">
               <div tabIndex={0} role="button" className="relative">
                 {sanitisedNotifications.length !== 0 && (
@@ -66,7 +66,7 @@ const NavBar = () => {
               </div>
               <ul
                 tabIndex={-1}
-                className="dropdown-content menu absolute right-1 md:left-1 bg-white text-slate-900 rounded-box z-1 w-45 p-2 shadow-sm"
+                className="dropdown-content menu bg-white text-slate-900 rounded-box z-1 w-45 p-2 shadow-sm"
               >
                 <li
                   className={`text-[13px] text-center ${notifications.length === 0 ? "font-medium text-gray-400" : "font-bold"}`}
@@ -84,7 +84,7 @@ const NavBar = () => {
             <NavLink
               to="/requests"
               className={({ isActive }) =>
-                `max-[648px]:hidden text-base font-medium hover:scale-106 duration-150 pb-1 ${isActive && "border-b-2 border-white/90 scale-106"}`
+                `text-base font-medium hover:scale-106 duration-150 pb-1 ${isActive && "border-b-2 border-white/90 scale-106"}`
               }
             >
               Requets
@@ -92,11 +92,35 @@ const NavBar = () => {
             <NavLink
               to="/connections"
               className={({ isActive }) =>
-                `max-[648px]:hidden text-base font-medium hover:scale-106 duration-150 pb-1 ${isActive && "border-b-2 border-white/90 scale-106"}`
+                `text-base font-medium hover:scale-106 duration-150 pb-1 ${isActive && "border-b-2 border-white/90 scale-106"}`
               }
             >
               Connections
             </NavLink>
+          </div>
+          <div className="min-[648px]:hidden dropdown dropdown-end">
+            <div tabIndex={0} role="button" className="m-1 relative">
+              {sanitisedNotifications.length !== 0 && (
+                <span className="bg-red-600 w-2 h-2 absolute -top-0.5 -right-1 rounded-full" />
+              )}
+              <IoNotificationsCircleOutline className="size-7" />
+            </div>
+            <ul
+              tabIndex={-1}
+              className="dropdown-content menu bg-white text-slate-900 rounded-box z-1 w-45 p-2 shadow-sm"
+            >
+              <li
+                className={`text-[13px] text-center ${notifications.length === 0 ? "font-medium text-gray-400" : "font-bold"}`}
+              >
+                {notifications.length === 0
+                  ? "Empty "
+                  : "You have notification from"}
+              </li>
+              {sanitisedNotifications.map((item) => {
+                if (targetUserId === item.senderId) return;
+                return <Notifications key={item.senderId} data={item} />;
+              })}
+            </ul>
           </div>
           <div className="dropdown dropdown-end mx-[8px]">
             <div
