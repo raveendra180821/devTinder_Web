@@ -40,7 +40,7 @@
     - sudo nano /etc/nginx/sites-available/default
 
         server {
-            root /var/www/html;
+            root /var/www/html; 
             index index.html;
 
             location /api/ {
