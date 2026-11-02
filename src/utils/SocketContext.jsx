@@ -16,7 +16,7 @@ const socketOptions = {
 };
 
 if (isProduction) {
-  socketOptions.path = SOCKET_URL + "/socket.io";
+  socketOptions.path = "/socket.io";
 }
 
 export const SocketContextProvider = ({ children }) => {
