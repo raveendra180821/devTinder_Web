@@ -1,13 +1,14 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { io } from "socket.io-client";
+import { BASE_URL } from "./constants";
 
 const SocketContext = createContext(null);
 
 const isProduction = window.location.hostname !== "localhost";
 
 const SOCKET_URL = isProduction
-  ? window.location.origin
+  ? BASE_URL
   : "http://localhost:3000";
 
 const socketOptions = {
@@ -15,7 +16,7 @@ const socketOptions = {
 };
 
 if (isProduction) {
-  socketOptions.path = "/socket.io";
+  socketOptions.path = SOCKET_URL + "/socket.io";
 }
 
 export const SocketContextProvider = ({ children }) => {
