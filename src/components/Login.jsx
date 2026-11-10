@@ -117,6 +117,7 @@ const Login = () => {
                 value={userName}
                 className="input font-bold placeholder:font-medium w-full min-h-[40px] bg-white/10 outline-none required:border-red-700"
                 placeholder="Enter Email ID"
+                autoComplete="email"
                 onChange={(e) => setUserName(e.target.value)}
               />
             </fieldset>
@@ -128,6 +129,7 @@ const Login = () => {
                   value={password}
                   className="input font-bold placeholder:font-medium w-full min-h-[40px] bg-white/10 outline-none pb-1"
                   placeholder="Enter Password"
+                  autoComplete={isLoginForm ? "current-password" : "new-password"}
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <PiEyeLight className={`absolute top-2.5 right-2.5 size-5 ${!password || passwordType === "password" ? "hidden" : "inline"}`} onClick={() => setPasswordType("password")}/>

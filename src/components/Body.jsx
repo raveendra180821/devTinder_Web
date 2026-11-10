@@ -16,6 +16,7 @@ const Body = ({ children }) => {
     const navigate = useNavigate()
 
     const fetchUser = async () => {
+        console.log("In fetch")
         try {
             const res = await axios.get(
                 BASE_URL + "/profile/view",
